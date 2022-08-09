@@ -6,7 +6,10 @@
           <router-link to="/"><img src="../assets/logo.jpg" alt="Logo" /></router-link>
         </div>
         <router-link to="/"
-          ><h1 title="Home">{{ title }}</h1></router-link
+          ><h2 title="Home">{{ title1 }}</h2></router-link
+        >
+        <router-link to="/desk"
+          ><h2 title="Desk">{{ title2 }}</h2></router-link
         >
       </div>
       <div class="right-menu">
@@ -23,7 +26,11 @@
 export default {
   name: "Header-",
   props: {
-    title: {
+    title1: {
+      type: String,
+      default: "title",
+    },
+    title2: {
       type: String,
       default: "title",
     },
@@ -56,13 +63,13 @@ export default {
   color: #ffffff;
 }
 
-h1 {
+h2 {
   font-size: 1.5rem;
   font-weight: 500;
   transition: 0.3s;
 }
 
-h1:hover {
+h2:hover {
   color: #3dc074;
 }
 

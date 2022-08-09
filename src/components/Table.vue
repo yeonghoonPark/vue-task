@@ -19,14 +19,28 @@
             @mouseup="showPoster"
           >
             <td>{{ movie.movieName }}</td>
-            <td><input type="text" /></td>
-            <td><input type="text" /></td>
             <td>
-              <input type="text" max="5" min="0" title="Max Score is 5" />
+              <input
+                type="text"
+                class="inputs-first"
+                maxlength="15"
+                placeholder="1~15자까지 입력 가능합니다."
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                class="inputs-second"
+                maxlength="15"
+                placeholder="1~15자까지 입력 가능합니다."
+              />
+            </td>
+            <td>
+              <input type="number" class="inputs-third" min="0" max="5" placeholder="1~5" />
             </td>
             <td class="hidden" @click.capture="showImage">
               <img :src="movie.imageSrc" :alt="movie.movieName" />
-              <div class="modal-image" v-if="isIfshow">
+              <div class="modal-image" v-if="isImageModalShow">
                 <img :src="movie.imageSrc" :alt="movie.movieName" />
                 <div class="btn-box">
                   <ButtonModalClose
@@ -42,27 +56,94 @@
       </table>
       <form>
         <div class="btn-box">
-          <ButtonTable :message="confirm" @click="onSubmit" />
+          <ButtonTable :message="confirm" @click="onClick" />
         </div>
       </form>
+      <div class="print" v-if="isInputModalShow">
+        <div class="output-box">
+          <ul class="fi-output">
+            <li v-for="(movie, index) in movieList" :key="index">Title: {{ movie.movieName }}</li>
+          </ul>
+          <ul class="se-output">
+            <li v-for="(aF, index) in arrayFirst" :key="index">한줄평: {{ aF }}</li>
+          </ul>
+          <ul class="th-output">
+            <li v-for="(aC, index) in arraySecond" :key="index">감독에게: {{ aC }}</li>
+          </ul>
+          <ul class="fo-output">
+            <li v-for="(aT, index) in arrayThird" :key="index">평점: {{ aT }}</li>
+          </ul>
+        </div>
+        <div class="btn-box">
+          <ButtonPrintModalClose
+            style="margin-top: 3rem"
+            :message="close"
+            @click="inputModalClosing"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { provide } from "@vue/runtime-core";
-// import { ref } from "vue";
-// import { reactive } from "vue";
+import { ref, reactive } from "vue";
 import ButtonTable from "./ButtonDefault.vue";
 import ButtonModalClose from "./ButtonDefault.vue";
+import ButtonPrintModalClose from "./ButtonDefault.vue";
 
 export default {
-  components: { ButtonTable, ButtonModalClose },
-  // name의 목적?
+  components: { ButtonTable, ButtonModalClose, ButtonPrintModalClose },
   name: "Table-",
   setup() {
-    // provide("message", "닫기");
-
+    const movieList = reactive([
+      {
+        movieName: "비상선언",
+        oneLineReview: "",
+        toDirctor: "",
+        grade: "",
+        imageSrc: require("../assets/emergency_declaration.jpg"),
+      },
+      {
+        movieName: "한산-용의 출현",
+        oneLineReview: "",
+        toDirctor: "",
+        grade: "",
+        imageSrc: require("../assets/appearance_of_dragon.jpg"),
+      },
+      {
+        movieName: "헌트",
+        oneLineReview: "",
+        toDirctor: "",
+        grade: "",
+        imageSrc: require("../assets/hunt.jpg"),
+      },
+      {
+        movieName: "미니언즈2",
+        oneLineReview: "",
+        toDirctor: "",
+        grade: "",
+        imageSrc: require("../assets/minions2.jpg"),
+      },
+      {
+        movieName: "시맨틱 에러-더 무비",
+        oneLineReview: "",
+        toDirctor: "",
+        grade: "",
+        imageSrc: require("../assets/symantec_error_the_movie.jpg"),
+      },
+    ]);
+    const theadTitle = reactive({
+      th1: "영화",
+      th2: "한줄평",
+      th3: "감독에게",
+      th4: "평점",
+      th5: "포스터",
+    });
+    const close = ref("닫기");
+    const confirm = ref("확인");
+    let isImageModalShow = ref(false);
+    let isInputModalShow = ref(false);
     const CLASS_NAME_ACTIVE = "active";
     const CLASS_NAME_HIDDEN = "hidden";
 
@@ -93,83 +174,90 @@ export default {
       lastTarget.classList.remove(CLASS_NAME_HIDDEN);
     };
 
-    return { changeBackgroundColor, showPoster };
+    const showImage = () => {
+      isImageModalShow = true;
+    };
+
+    const modalClosing = (event) => {
+      event.stopPropagation();
+      isImageModalShow = false;
+      isInputModalShow = false;
+    };
+
+    return {
+      movieList,
+      theadTitle,
+      close,
+      confirm,
+      isImageModalShow,
+      isInputModalShow,
+      changeBackgroundColor,
+      showPoster,
+      showImage,
+      modalClosing,
+    };
   },
   data() {
     return {
-      movieList: [
-        {
-          movieName: "비상선언",
-          oneLineReview: "",
-          toDirctor: "",
-          grade: "",
-          imageSrc: require("../assets/emergency_declaration.jpg"),
-        },
-        {
-          movieName: "한산-용의 출현",
-          oneLineReview: "",
-          toDirctor: "",
-          grade: "",
-          imageSrc: require("../assets/appearance_of_dragon.jpg"),
-        },
-        {
-          movieName: "헌트",
-          oneLineReview: "",
-          toDirctor: "",
-          grade: "",
-          imageSrc: require("../assets/hunt.jpg"),
-        },
-        {
-          movieName: "미니언즈2",
-          oneLineReview: "",
-          toDirctor: "",
-          grade: "",
-          imageSrc: require("../assets/minions2.jpg"),
-        },
-        {
-          movieName: "시맨틱 에러-더 무비",
-          oneLineReview: "",
-          toDirctor: "",
-          grade: "",
-          imageSrc: require("../assets/symantec_error_the_movie.jpg"),
-        },
-      ],
-      theadTitle: {
-        th1: "영화",
-        th2: "소감",
-        th3: "평가",
-        th4: "평점",
-        th5: "포스터",
-      },
-      close: "닫기",
-      confirm: "확인",
-      isIfshow: false,
-
-      testValue: "",
-      testValue2: "",
-      as: "",
+      arrayFirst: [],
+      arraySecond: [],
+      arrayThird: [],
     };
   },
   methods: {
-    showImage() {
-      this.isIfshow = true;
-    },
-
-    modalClosing(event) {
+    inputModalClosing(event) {
       event.stopPropagation();
-      this.isIfshow = false;
+      this.isInputModalShow = false;
+      this.arrayFirst = [];
+      this.arraySecond = [];
+      this.arrayThird = [];
     },
 
-    onSubmit(event) {
+    onClick(event) {
       event.preventDefault();
-      const inputs = document.querySelectorAll("input");
-      console.log(inputs[0]);
-      inputs.forEach((input) => {
-        if (input.value !== "") {
-          console.log("완료");
-        } else {
-          console.log("빈칸없이 입력해주세요");
-        }
+      const inputsFirst = document.querySelectorAll(".inputs-first");
+      const inputsSecond = document.querySelectorAll(".inputs-second");
+      const inputsThird = document.querySelectorAll(".inputs-third");
+      if (
+        inputsFirst[0].value !== "" &&
+        inputsFirst[1].value !== "" &&
+        inputsFirst[2].value !== "" &&
+        inputsFirst[3].value !== "" &&
+        inputsFirst[4].value !== "" &&
+        inputsSecond[0].value !== "" &&
+        inputsSecond[1].value !== "" &&
+        inputsSecond[2].value !== "" &&
+        inputsSecond[3].value !== "" &&
+        inputsSecond[4].value !== "" &&
+        inputsThird[0].value !== "" &&
+        inputsThird[1].value !== "" &&
+        inputsThird[2].value !== "" &&
+        inputsThird[3].value !== "" &&
+        inputsThird[4].value !== ""
+      ) {
+        console.log("성공");
+        this.saveInputValue();
+        this.isInputModalShow = true;
+      } else {
+        alert("빈 칸을 모두 입력해주세요");
+      }
+    },
+
+    saveInputValue() {
+      const inputsFirst = document.querySelectorAll(".inputs-first");
+      const inputsSecond = document.querySelectorAll(".inputs-second");
+      const inputsThird = document.querySelectorAll(".inputs-third");
+
+      inputsFirst.forEach((item) => {
+        this.arrayFirst.push(item.value);
+      });
+
+      inputsSecond.forEach((item) => {
+        this.arraySecond.push(item.value);
+      });
+
+      inputsThird.forEach((item) => {
+        this.arrayThird.push(item.value);
       });
     },
   },
@@ -250,5 +338,32 @@ td img {
   width: 440px;
   height: 620px;
   transform: translateY(20%);
+}
+
+.print {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.output-box {
+  position: relative;
+  width: 80%;
+  height: 600px;
+  margin: 2rem auto;
+  transform: translateY(10%);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background: #ffffff;
+  border: 5px solid #111101;
+}
+.output-box ul,
+.output-box li {
+  padding: 1rem;
 }
 </style>
