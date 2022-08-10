@@ -10,7 +10,10 @@ const routes = [
   {
     path: "/desk",
     name: "DeskView",
-    component: () => import(/* webpackChunkName: "table", webpackPrefetch: true */ "../views/DeskView.vue"),
+    component: () =>
+      import(
+        /* webpackChunkName: "table", webpackPrefetch: true */ "../views/DeskView.vue"
+      ),
   },
 ];
 

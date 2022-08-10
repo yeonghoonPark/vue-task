@@ -15,30 +15,17 @@
           <tr
             v-for="(movie, index) in movieList"
             :key="index"
-            @mousedown="showPoster($event), changeBackgroundColor($event)"
+            @click="changeBackgroundColor"
+            @mouseup="showPoster"
           >
-            <td>
-              <div>{{ movie.movieName }}</div>
-              <ButtonInputActivation
-                style="
-                  width: 80px;
-                  height: 22px;
-                  margin: 5px auto 0;
-                  font-size: 12px;
-                  line-height: 12px;
-                  background-color: #666666;
-                "
-                @click="testFunction2"
-                :message="activation"
-              />
-            </td>
+            <td>{{ movie.movieName }}</td>
             <td>
               <input
                 type="text"
                 class="inputs-first"
                 maxlength="15"
                 placeholder="1~15자까지 입력 가능합니다."
-                disabled
+                :disabled="isDisabled"
               />
             </td>
             <td>
@@ -47,7 +34,6 @@
                 class="inputs-second"
                 maxlength="15"
                 placeholder="1~15자까지 입력 가능합니다."
-                disabled
               />
             </td>
             <td>
@@ -57,7 +43,6 @@
                 min="0"
                 max="5"
                 placeholder="1~5"
-                disabled
               />
             </td>
             <td class="hidden" @click="showImage">
@@ -78,11 +63,7 @@
       </table>
       <form>
         <div class="btn-box">
-          <ButtonTable
-            style="margin-top: 1.5rem"
-            :message="confirm"
-            @click="onClick"
-          />
+          <ButtonTable :message="confirm" @click="onClick" />
         </div>
       </form>
       <div class="print" v-if="isInputModalShow">
@@ -125,7 +106,7 @@ import { ref, reactive } from "vue";
 import ButtonTable from "./ButtonDefault.vue";
 import ButtonModalClose from "./ButtonDefault.vue";
 import ButtonPrintModalClose from "./ButtonDefault.vue";
-import ButtonInputActivation from "./ButtonDefault.vue";
+
 import MiniImage from "./ImageDefault.vue";
 import ModalImage from "./ImageDefault.vue";
 
@@ -134,7 +115,6 @@ export default {
     ButtonTable,
     ButtonModalClose,
     ButtonPrintModalClose,
-    ButtonInputActivation,
     MiniImage,
     ModalImage,
   },
@@ -250,9 +230,6 @@ export default {
 
       isImageModalShow: false,
       isInputModalShow: false,
-      isDisabled: true,
-
-      activation: "Activation",
     };
   },
   methods: {
@@ -323,30 +300,6 @@ export default {
         this.arrayThird.push(item.value);
       });
     },
-
-    testFunction2(event) {
-      // const target = event.currentTarget.parentNode.parentNode.parentNode;
-      // const inputs = target.querySelectorAll("input");
-      // console.log(inputs[0].parentNode.parentNode);
-      // inputs.forEach((input) => {
-      //   {
-      //     input.parentNode.style.backgroundColor === "3dc07433"
-      //       ? (input.disabled = false)
-      //       : (input.disabled = true);
-      //   }
-      // });
-      const target = event.currentTarget.parentNode;
-      console.log(target);
-      const inputs = target.parentNode.parentNode.querySelectorAll("input");
-      console.log(inputs);
-      inputs.forEach((input) => {
-        {
-          input.parentNode.parentNode.className === "active"
-            ? (input.disabled = false)
-            : (input.disabled = true);
-        }
-      });
-    },
   },
 };
 </script>
@@ -397,7 +350,7 @@ tbody tr td:last-child {
 }
 
 .active {
-  background-color: rgba(61, 192, 116, 0.2);
+  background-color: #3dc07433;
 }
 
 td img {

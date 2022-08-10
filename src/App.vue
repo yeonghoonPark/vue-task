@@ -1,13 +1,9 @@
 <template>
-  <Header title1="Movie" title2="Desk" />
   <router-view />
 </template>
 
 <script>
-import Header from "./components/Header.vue";
-export default {
-  components: { Header },
-};
+export default {};
 </script>
 
 <style>

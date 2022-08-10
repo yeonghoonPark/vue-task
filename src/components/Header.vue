@@ -3,7 +3,9 @@
     <div class="container">
       <div class="left-menu">
         <div class="logo" title="Home">
-          <router-link to="/"><img src="../assets/logo.jpg" alt="Logo" /></router-link>
+          <router-link to="/"
+            ><img src="../assets/logo.jpg" alt="Logo"
+          /></router-link>
         </div>
         <router-link to="/"
           ><h2 title="Home">{{ title1 }}</h2></router-link
