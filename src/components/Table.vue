@@ -20,15 +20,8 @@
             <td>
               <div>{{ movie.movieName }}</div>
               <ButtonInputActivation
-                style="
-                  width: 80px;
-                  height: 22px;
-                  margin: 5px auto 0;
-                  font-size: 12px;
-                  line-height: 12px;
-                  background-color: #666666;
-                "
-                @click="testFunction2"
+                class="btn-activation"
+                @click="giveToLifeInput"
                 :message="activation"
               />
             </td>
@@ -37,7 +30,7 @@
                 type="text"
                 class="inputs-first"
                 maxlength="15"
-                placeholder="1~15자까지 입력 가능합니다."
+                placeholder="15자"
                 disabled
               />
             </td>
@@ -46,7 +39,7 @@
                 type="text"
                 class="inputs-second"
                 maxlength="15"
-                placeholder="1~15자까지 입력 가능합니다."
+                placeholder="15자"
                 disabled
               />
             </td>
@@ -56,12 +49,16 @@
                 class="inputs-third"
                 min="0"
                 max="5"
-                placeholder="1~5"
+                placeholder="Max 5"
                 disabled
               />
             </td>
             <td class="hidden" @click="showImage">
-              <MiniImage :src="movie.imageSrc" :alt="movie.movieName" />
+              <MiniImage
+                :src="movie.imageSrc"
+                :alt="movie.movieName"
+                title="확대"
+              />
               <div class="modal-image" v-if="isImageModalShow">
                 <ModalImage :src="movie.imageSrc" :alt="movie.movieName" />
                 <div class="btn-box">
@@ -85,32 +82,19 @@
           />
         </div>
       </form>
-      <div class="print" v-if="isInputModalShow">
+      <div class="print" v-show="isInputModalShow">
         <div class="output-box">
-          <ul class="fi-output">
-            <li v-for="(movie, index) in movieList" :key="index">
-              Title: {{ movie.movieName }}
+          <h3 style="text-align: center"></h3>
+          <ul>
+            <li v-for="(aF, index) in arrayOne" :key="index">
+              {{ aF }}
             </li>
           </ul>
-          <ul class="se-output">
-            <li v-for="(aF, index) in arrayFirst" :key="index">
-              한줄평: {{ aF }}
-            </li>
-          </ul>
-          <ul class="th-output">
-            <li v-for="(aC, index) in arraySecond" :key="index">
-              감독에게: {{ aC }}
-            </li>
-          </ul>
-          <ul class="fo-output">
-            <li v-for="(aT, index) in arrayThird" :key="index">
-              평점: {{ aT }}
-            </li>
-          </ul>
+          <img class="confirm-image" src="" alt="" />
         </div>
         <div class="btn-box">
           <ButtonPrintModalClose
-            style="margin-top: 3rem"
+            style="margin-top: 2rem"
             :message="close"
             @click="inputModalClosing"
           />
@@ -121,13 +105,14 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
-import ButtonTable from "./ButtonDefault.vue";
-import ButtonModalClose from "./ButtonDefault.vue";
-import ButtonPrintModalClose from "./ButtonDefault.vue";
-import ButtonInputActivation from "./ButtonDefault.vue";
-import MiniImage from "./ImageDefault.vue";
-import ModalImage from "./ImageDefault.vue";
+import { ref, reactive } from 'vue';
+import ButtonTable from './ButtonDefault.vue';
+import ButtonModalClose from './ButtonDefault.vue';
+import ButtonPrintModalClose from './ButtonDefault.vue';
+import ButtonInputActivation from './ButtonDefault.vue';
+import MiniImage from './ImageDefault.vue';
+import ModalImage from './ImageDefault.vue';
+// import ConfirmImage from './ImageDefault.vue';
 
 export default {
   components: {
@@ -138,56 +123,56 @@ export default {
     MiniImage,
     ModalImage,
   },
-  name: "Table-",
+  name: 'Table-',
   setup() {
     const movieList = reactive([
       {
-        movieName: "비상선언",
-        oneLineReview: "",
-        toDirctor: "",
-        grade: "",
-        imageSrc: require("../assets/emergency_declaration.jpg"),
+        movieName: '비상선언',
+        oneLineReview: '',
+        toDirctor: '',
+        grade: '',
+        imageSrc: require('../assets/emergency_declaration.jpg'),
       },
       {
-        movieName: "한산-용의 출현",
-        oneLineReview: "",
-        toDirctor: "",
-        grade: "",
-        imageSrc: require("../assets/appearance_of_dragon.jpg"),
+        movieName: '한산-용의 출현',
+        oneLineReview: '',
+        toDirctor: '',
+        grade: '',
+        imageSrc: require('../assets/appearance_of_dragon.jpg'),
       },
       {
-        movieName: "헌트",
-        oneLineReview: "",
-        toDirctor: "",
-        grade: "",
-        imageSrc: require("../assets/hunt.jpg"),
+        movieName: '헌트',
+        oneLineReview: '',
+        toDirctor: '',
+        grade: '',
+        imageSrc: require('../assets/hunt.jpg'),
       },
       {
-        movieName: "미니언즈2",
-        oneLineReview: "",
-        toDirctor: "",
-        grade: "",
-        imageSrc: require("../assets/minions2.jpg"),
+        movieName: '미니언즈2',
+        oneLineReview: '',
+        toDirctor: '',
+        grade: '',
+        imageSrc: require('../assets/minions2.jpg'),
       },
       {
-        movieName: "시맨틱 에러-더 무비",
-        oneLineReview: "",
-        toDirctor: "",
-        grade: "",
-        imageSrc: require("../assets/symantec_error_the_movie.jpg"),
+        movieName: '시맨틱 에러-더 무비',
+        oneLineReview: '',
+        toDirctor: '',
+        grade: '',
+        imageSrc: require('../assets/symantec_error_the_movie.jpg'),
       },
     ]);
     const theadTitle = reactive({
-      th1: "영화",
-      th2: "한줄평",
-      th3: "감독에게",
-      th4: "평점",
-      th5: "포스터",
+      th1: '영화',
+      th2: '한줄평',
+      th3: '감독에게',
+      th4: '평점',
+      th5: '포스터',
     });
-    const close = ref("닫기");
-    const confirm = ref("확인");
-    const CLASS_NAME_ACTIVE = "active";
-    const CLASS_NAME_HIDDEN = "hidden";
+    const close = ref('닫기');
+    const confirm = ref('확인');
+    const CLASS_NAME_ACTIVE = 'active';
+    const CLASS_NAME_HIDDEN = 'hidden';
     // let isImageModalShow = ref(false);
     // let isInputModalShow = ref(false);
 
@@ -198,7 +183,7 @@ export default {
     };
 
     const changeBackgroundColor = (event) => {
-      const trElement = document.querySelectorAll("tbody>tr");
+      const trElement = document.querySelectorAll('tbody>tr');
       const target = event.currentTarget;
       classNameActiveRemove(trElement);
       target.classList.add(CLASS_NAME_ACTIVE);
@@ -211,7 +196,7 @@ export default {
     };
 
     const showPoster = (event) => {
-      const lastTdElement = document.querySelectorAll("tbody>tr>td:last-child");
+      const lastTdElement = document.querySelectorAll('tbody>tr>td:last-child');
       const target = event.currentTarget;
       const lastTarget = target.lastChild;
       classNameAddHidden(lastTdElement);
@@ -238,21 +223,21 @@ export default {
       // isInputModalShow,
       changeBackgroundColor,
       showPoster,
-      // showImage,
-      // modalClosing,
     };
   },
   data() {
     return {
-      arrayFirst: [],
-      arraySecond: [],
-      arrayThird: [],
+      arrayOne: [],
+      arrayTwo: [],
+      arrayThree: [],
+      arrayFour: [],
+      arrayFive: [],
 
       isImageModalShow: false,
       isInputModalShow: false,
       isDisabled: true,
 
-      activation: "Activation",
+      activation: 'Activation',
     };
   },
   methods: {
@@ -270,78 +255,77 @@ export default {
     inputModalClosing(event) {
       event.stopPropagation();
       this.isInputModalShow = false;
-      this.arrayFirst = [];
-      this.arraySecond = [];
-      this.arrayThird = [];
+      this.arrayOne = [];
     },
 
     // onClick 원본
+    // onClick(event) {
+    //   event.preventDefault();
+    //   const inputsFirst = document.querySelectorAll('.inputs-first');
+    //   const inputsSecond = document.querySelectorAll('.inputs-second');
+    //   const inputsThird = document.querySelectorAll('.inputs-third');
+    //   if (
+    //     inputsFirst[0].value !== '' &&
+    //     inputsFirst[1].value !== '' &&
+    //     inputsFirst[2].value !== '' &&
+    //     inputsFirst[3].value !== '' &&
+    //     inputsFirst[4].value !== '' &&
+    //     inputsSecond[0].value !== '' &&
+    //     inputsSecond[1].value !== '' &&
+    //     inputsSecond[2].value !== '' &&
+    //     inputsSecond[3].value !== '' &&
+    //     inputsSecond[4].value !== '' &&
+    //     inputsThird[0].value !== '' &&
+    //     inputsThird[1].value !== '' &&
+    //     inputsThird[2].value !== '' &&
+    //     inputsThird[3].value !== '' &&
+    //     inputsThird[4].value !== ''
+    //   ) {
+    //     console.log('성공');
+    //     this.saveInputValue();
+    //     this.isInputModalShow = true;
+    //   } else {
+    //     alert('빈 칸을 모두 입력해주세요');
+    //   }
+    // },
+
+    saveInputValue(inputValue) {
+      this.arrayOne.push(inputValue);
+    },
+
     onClick(event) {
       event.preventDefault();
-      const inputsFirst = document.querySelectorAll(".inputs-first");
-      const inputsSecond = document.querySelectorAll(".inputs-second");
-      const inputsThird = document.querySelectorAll(".inputs-third");
-      if (
-        inputsFirst[0].value !== "" &&
-        inputsFirst[1].value !== "" &&
-        inputsFirst[2].value !== "" &&
-        inputsFirst[3].value !== "" &&
-        inputsFirst[4].value !== "" &&
-        inputsSecond[0].value !== "" &&
-        inputsSecond[1].value !== "" &&
-        inputsSecond[2].value !== "" &&
-        inputsSecond[3].value !== "" &&
-        inputsSecond[4].value !== "" &&
-        inputsThird[0].value !== "" &&
-        inputsThird[1].value !== "" &&
-        inputsThird[2].value !== "" &&
-        inputsThird[3].value !== "" &&
-        inputsThird[4].value !== ""
-      ) {
-        console.log("성공");
-        this.saveInputValue();
-        this.isInputModalShow = true;
-      } else {
-        alert("빈 칸을 모두 입력해주세요");
-      }
-    },
+      const printInputs = document.querySelectorAll('input');
+      // const outputUl = document.querySelector('.output-ul');
+      // console.log(outputUl);
+      this.isInputModalShow = true;
 
-    saveInputValue() {
-      const inputsFirst = document.querySelectorAll(".inputs-first");
-      const inputsSecond = document.querySelectorAll(".inputs-second");
-      const inputsThird = document.querySelectorAll(".inputs-third");
-
-      inputsFirst.forEach((item) => {
-        this.arrayFirst.push(item.value);
-      });
-
-      inputsSecond.forEach((item) => {
-        this.arraySecond.push(item.value);
-      });
-
-      inputsThird.forEach((item) => {
-        this.arrayThird.push(item.value);
+      printInputs.forEach((input) => {
+        if (input.parentNode.parentNode.className === 'active') {
+          // console.log(input.value);
+          // const outputUl = document.querySelector('.output-ul');
+          // const li = document.createElement('li');
+          // outputUl.appendChild(li);
+          // const inpuValue = input.value;
+          // li.innerText = inpuValue;
+          this.saveInputValue(input.value);
+        }
       });
     },
 
-    testFunction2(event) {
-      // const target = event.currentTarget.parentNode.parentNode.parentNode;
-      // const inputs = target.querySelectorAll("input");
-      // console.log(inputs[0].parentNode.parentNode);
-      // inputs.forEach((input) => {
-      //   {
-      //     input.parentNode.style.backgroundColor === "3dc07433"
-      //       ? (input.disabled = false)
-      //       : (input.disabled = true);
-      //   }
-      // });
+    giveToLifeInput(event) {
       const target = event.currentTarget.parentNode;
-      console.log(target);
-      const inputs = target.parentNode.parentNode.querySelectorAll("input");
-      console.log(inputs);
+      const inputs = target.parentNode.parentNode.querySelectorAll('input');
+      const testTitle = target.firstChild.innerText;
+      const h3 = document.querySelector('h3');
+      h3.innerText = testTitle;
+
+      const confirmImage = document.querySelector('.confirm-image');
+      console.log(confirmImage);
+
       inputs.forEach((input) => {
         {
-          input.parentNode.parentNode.className === "active"
+          input.parentNode.parentNode.className === 'active'
             ? (input.disabled = false)
             : (input.disabled = true);
         }
@@ -352,14 +336,20 @@ export default {
 </script>
 
 <style scoped>
+/* Effective className */
 .hidden {
   display: none;
 }
 
 .show {
-  display: show;
+  display: block;
 }
 
+.active {
+  background-color: rgba(61, 192, 116, 0.2);
+}
+
+/* CSS */
 .desk {
   width: 100%;
   margin: 77px auto 0;
@@ -396,14 +386,24 @@ tbody tr td:last-child {
   padding: 0 1rem;
 }
 
-.active {
-  background-color: rgba(61, 192, 116, 0.2);
-}
-
 td img {
   width: 31px;
   height: 37px;
   cursor: zoom-in;
+}
+
+.btn-activation {
+  width: 80px;
+  height: 22px;
+  margin: 5px auto 0;
+  font-size: 12px;
+  line-height: 12px;
+  background-color: #aabbaa;
+}
+
+.btn-activation:hover {
+  color: #3dc074;
+  background-color: #111101;
 }
 
 .btn-box {
@@ -438,18 +438,20 @@ td img {
 .output-box {
   position: relative;
   width: 80%;
-  height: 600px;
+  height: 700px;
   margin: 2rem auto;
-  transform: translateY(10%);
+  transform: translateY(5%);
   display: flex;
+  flex-flow: column;
   justify-content: space-evenly;
-  align-items: center;
   background: #ffffff;
-  border: 5px solid #111101;
+  border: 5px solid #3dc074;
 }
 
-.output-box ul,
-.output-box li {
+.output-box ul {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
   padding: 1rem;
 }
 </style>

@@ -8,7 +8,7 @@ export default {
   props: {
     message: {
       type: String,
-      default: "default",
+      default: 'default',
     },
   },
 };
@@ -25,7 +25,7 @@ button {
   background: #111101;
   color: #ffffff;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.1s;
 }
 
 button:hover {

@@ -8,7 +8,7 @@ export default {
   props: {
     src: {
       type: String,
-      src: "",
+      src: '',
     },
   },
 };
