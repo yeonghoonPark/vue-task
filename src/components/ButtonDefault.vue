@@ -2,13 +2,12 @@
   <button @click="$emit('someEvent')">{{ message }}</button>
 </template>
 
-//
 <script>
 export default {
   props: {
     message: {
       type: String,
-      default: 'default',
+      default: "default",
     },
   },
 };

@@ -15,6 +15,14 @@ const routes = [
         /* webpackChunkName: "table", webpackPrefetch: true */ "../views/DeskView.vue"
       ),
   },
+  {
+    path: "/desk2",
+    name: "DeskView2",
+    component: () =>
+      import(
+        /* webpackChunkName: "table", webpackPrefetch: true */ "../views/DeskView2.vue"
+      ),
+  },
 ];
 
 const router = createRouter({

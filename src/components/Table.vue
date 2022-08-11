@@ -4,11 +4,9 @@
       <table>
         <thead>
           <tr>
-            <th>{{ theadTitle.th1 }}</th>
-            <th>{{ theadTitle.th2 }}</th>
-            <th>{{ theadTitle.th3 }}</th>
-            <th>{{ theadTitle.th4 }}</th>
-            <th>{{ theadTitle.th5 }}</th>
+            <th v-for="(theadTitle, index) in theadTitles" :key="index">
+              {{ theadTitle.th }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -26,31 +24,32 @@
               />
             </td>
             <td>
-              <input
-                type="text"
+              <FirstInput
                 class="inputs-first"
                 maxlength="15"
                 placeholder="15자"
                 disabled
+                v-model="movie.oneLineReview"
               />
             </td>
             <td>
-              <input
-                type="text"
+              <SecondInput
                 class="inputs-second"
                 maxlength="15"
                 placeholder="15자"
                 disabled
+                v-model="movie.toDirector"
               />
             </td>
             <td>
-              <input
+              <ThirdInput
                 type="number"
                 class="inputs-third"
                 min="0"
                 max="5"
                 placeholder="Max 5"
                 disabled
+                v-model="movie.grade"
               />
             </td>
             <td class="hidden" @click="showImage">
@@ -59,6 +58,7 @@
                 :alt="movie.movieName"
                 title="확대"
               />
+              <!-- v-if, isImageModalShow -->
               <div class="modal-image" v-if="isImageModalShow">
                 <ModalImage :src="movie.imageSrc" :alt="movie.movieName" />
                 <div class="btn-box">
@@ -73,6 +73,7 @@
           </tr>
         </tbody>
       </table>
+      {{ movieList }}확인
       <form>
         <div class="btn-box">
           <ButtonTable
@@ -86,15 +87,23 @@
         <div class="output-box">
           <h3 style="text-align: center"></h3>
           <ul>
-            <li v-for="(aF, index) in arrayOne" :key="index">
+            <li v-for="(aF, index) in inputArray" :key="index">
               {{ aF }}
             </li>
           </ul>
-          <img class="confirm-image" src="" alt="" />
+
+          <div v-for="(movie, index) in movieList" :key="index">
+            <img
+              v-if="movie.testIndex === index"
+              style="width: 80px; height: 100px"
+              :src="movie.imageSrc"
+              alt=""
+            />
+          </div>
         </div>
         <div class="btn-box">
           <ButtonPrintModalClose
-            style="margin-top: 2rem"
+            style="margin-top: 6.3rem"
             :message="close"
             @click="inputModalClosing"
           />
@@ -105,14 +114,16 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
-import ButtonTable from './ButtonDefault.vue';
-import ButtonModalClose from './ButtonDefault.vue';
-import ButtonPrintModalClose from './ButtonDefault.vue';
-import ButtonInputActivation from './ButtonDefault.vue';
-import MiniImage from './ImageDefault.vue';
-import ModalImage from './ImageDefault.vue';
-// import ConfirmImage from './ImageDefault.vue';
+import { ref, reactive } from "vue";
+import ButtonTable from "./ButtonDefault.vue";
+import ButtonModalClose from "./ButtonDefault.vue";
+import ButtonPrintModalClose from "./ButtonDefault.vue";
+import ButtonInputActivation from "./ButtonDefault.vue";
+import MiniImage from "./ImageDefault.vue";
+import ModalImage from "./ImageDefault.vue";
+import FirstInput from "./InputDefault.vue";
+import SecondInput from "./InputDefault.vue";
+import ThirdInput from "./InputDefault.vue";
 
 export default {
   components: {
@@ -122,57 +133,65 @@ export default {
     ButtonInputActivation,
     MiniImage,
     ModalImage,
+    FirstInput,
+    SecondInput,
+    ThirdInput,
   },
-  name: 'Table-',
+  name: "Table-",
   setup() {
     const movieList = reactive([
       {
-        movieName: '비상선언',
-        oneLineReview: '',
-        toDirctor: '',
-        grade: '',
-        imageSrc: require('../assets/emergency_declaration.jpg'),
+        movieName: "비상선언",
+        oneLineReview: "",
+        toDirector: "",
+        grade: "",
+        imageSrc: require("../assets/emergency_declaration.jpg"),
+        testIndex: 0,
       },
       {
-        movieName: '한산-용의 출현',
-        oneLineReview: '',
-        toDirctor: '',
-        grade: '',
-        imageSrc: require('../assets/appearance_of_dragon.jpg'),
+        movieName: "한산-용의 출현",
+        oneLineReview: "",
+        toDirector: "",
+        grade: "",
+        imageSrc: require("../assets/appearance_of_dragon.jpg"),
+        testIndex: 1,
       },
       {
-        movieName: '헌트',
-        oneLineReview: '',
-        toDirctor: '',
-        grade: '',
-        imageSrc: require('../assets/hunt.jpg'),
+        movieName: "헌트",
+        oneLineReview: "",
+        toDirector: "",
+        grade: "",
+        imageSrc: require("../assets/hunt.jpg"),
+        testIndex: 2,
       },
       {
-        movieName: '미니언즈2',
-        oneLineReview: '',
-        toDirctor: '',
-        grade: '',
-        imageSrc: require('../assets/minions2.jpg'),
+        movieName: "미니언즈2",
+        oneLineReview: "",
+        toDirector: "",
+        grade: "",
+        imageSrc: require("../assets/minions2.jpg"),
+        testIndex: 3,
       },
       {
-        movieName: '시맨틱 에러-더 무비',
-        oneLineReview: '',
-        toDirctor: '',
-        grade: '',
-        imageSrc: require('../assets/symantec_error_the_movie.jpg'),
+        movieName: "시맨틱 에러-더 무비",
+        oneLineReview: "",
+        toDirector: "",
+        grade: "",
+        imageSrc: require("../assets/symantec_error_the_movie.jpg"),
+        testIndex: 4,
       },
     ]);
-    const theadTitle = reactive({
-      th1: '영화',
-      th2: '한줄평',
-      th3: '감독에게',
-      th4: '평점',
-      th5: '포스터',
-    });
-    const close = ref('닫기');
-    const confirm = ref('확인');
-    const CLASS_NAME_ACTIVE = 'active';
-    const CLASS_NAME_HIDDEN = 'hidden';
+    const theadTitles = reactive([
+      { th: "영화" },
+      { th: "한줄평" },
+      { th: "감독에게" },
+      { th: "평점" },
+      { th: "포스터" },
+    ]);
+    const close = ref("닫기");
+    const confirm = ref("확인");
+    const CLASS_NAME_ACTIVE = "active";
+    const CLASS_NAME_HIDDEN = "hidden";
     // let isImageModalShow = ref(false);
     // let isInputModalShow = ref(false);
 
@@ -183,7 +202,7 @@ export default {
     };
 
     const changeBackgroundColor = (event) => {
-      const trElement = document.querySelectorAll('tbody>tr');
+      const trElement = document.querySelectorAll("tbody>tr");
       const target = event.currentTarget;
       classNameActiveRemove(trElement);
       target.classList.add(CLASS_NAME_ACTIVE);
@@ -196,7 +215,7 @@ export default {
     };
 
     const showPoster = (event) => {
-      const lastTdElement = document.querySelectorAll('tbody>tr>td:last-child');
+      const lastTdElement = document.querySelectorAll("tbody>tr>td:last-child");
       const target = event.currentTarget;
       const lastTarget = target.lastChild;
       classNameAddHidden(lastTdElement);
@@ -204,7 +223,7 @@ export default {
     };
 
     // const showImage = () => {
-    //   isImageModalShow = true;
+    //   isImageModalShow.value = true;
     //   console.log(isImageModalShow);
     // };
 
@@ -216,7 +235,7 @@ export default {
 
     return {
       movieList,
-      theadTitle,
+      theadTitles,
       close,
       confirm,
       // isImageModalShow,
@@ -227,23 +246,18 @@ export default {
   },
   data() {
     return {
-      arrayOne: [],
-      arrayTwo: [],
-      arrayThree: [],
-      arrayFour: [],
-      arrayFive: [],
+      inputArray: [],
 
       isImageModalShow: false,
       isInputModalShow: false,
       isDisabled: true,
 
-      activation: 'Activation',
+      activation: "Activation",
     };
   },
   methods: {
     showImage() {
       this.isImageModalShow = true;
-      console.log(this.isImageModalShow);
     },
 
     modalClosing(event) {
@@ -255,59 +269,20 @@ export default {
     inputModalClosing(event) {
       event.stopPropagation();
       this.isInputModalShow = false;
-      this.arrayOne = [];
+      this.inputArray = [];
     },
 
-    // onClick 원본
-    // onClick(event) {
-    //   event.preventDefault();
-    //   const inputsFirst = document.querySelectorAll('.inputs-first');
-    //   const inputsSecond = document.querySelectorAll('.inputs-second');
-    //   const inputsThird = document.querySelectorAll('.inputs-third');
-    //   if (
-    //     inputsFirst[0].value !== '' &&
-    //     inputsFirst[1].value !== '' &&
-    //     inputsFirst[2].value !== '' &&
-    //     inputsFirst[3].value !== '' &&
-    //     inputsFirst[4].value !== '' &&
-    //     inputsSecond[0].value !== '' &&
-    //     inputsSecond[1].value !== '' &&
-    //     inputsSecond[2].value !== '' &&
-    //     inputsSecond[3].value !== '' &&
-    //     inputsSecond[4].value !== '' &&
-    //     inputsThird[0].value !== '' &&
-    //     inputsThird[1].value !== '' &&
-    //     inputsThird[2].value !== '' &&
-    //     inputsThird[3].value !== '' &&
-    //     inputsThird[4].value !== ''
-    //   ) {
-    //     console.log('성공');
-    //     this.saveInputValue();
-    //     this.isInputModalShow = true;
-    //   } else {
-    //     alert('빈 칸을 모두 입력해주세요');
-    //   }
-    // },
-
     saveInputValue(inputValue) {
-      this.arrayOne.push(inputValue);
+      this.inputArray.push(inputValue);
     },
 
     onClick(event) {
       event.preventDefault();
-      const printInputs = document.querySelectorAll('input');
-      // const outputUl = document.querySelector('.output-ul');
-      // console.log(outputUl);
+      const printInputs = document.querySelectorAll("input");
       this.isInputModalShow = true;
 
       printInputs.forEach((input) => {
-        if (input.parentNode.parentNode.className === 'active') {
-          // console.log(input.value);
-          // const outputUl = document.querySelector('.output-ul');
-          // const li = document.createElement('li');
-          // outputUl.appendChild(li);
-          // const inpuValue = input.value;
-          // li.innerText = inpuValue;
+        if (input.parentNode.parentNode.className === "active") {
           this.saveInputValue(input.value);
         }
       });
@@ -315,17 +290,18 @@ export default {
 
     giveToLifeInput(event) {
       const target = event.currentTarget.parentNode;
-      const inputs = target.parentNode.parentNode.querySelectorAll('input');
+      const inputs = target.parentNode.parentNode.querySelectorAll("input");
       const testTitle = target.firstChild.innerText;
-      const h3 = document.querySelector('h3');
+      const h3 = document.querySelector("h3");
       h3.innerText = testTitle;
 
-      const confirmImage = document.querySelector('.confirm-image');
-      console.log(confirmImage);
+      // 마지막 작업.
+      const testImage = target.lastChild;
+      console.log(testImage);
 
       inputs.forEach((input) => {
         {
-          input.parentNode.parentNode.className === 'active'
+          input.parentNode.parentNode.className === "active"
             ? (input.disabled = false)
             : (input.disabled = true);
         }
@@ -346,7 +322,7 @@ export default {
 }
 
 .active {
-  background-color: rgba(61, 192, 116, 0.2);
+  background-color: #3dc07433;
 }
 
 /* CSS */
@@ -417,7 +393,7 @@ td img {
   right: 0;
   left: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .modal-image img {
@@ -432,15 +408,15 @@ td img {
   right: 0;
   left: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .output-box {
   position: relative;
-  width: 80%;
-  height: 700px;
+  width: 50%;
+  height: 500px;
   margin: 2rem auto;
-  transform: translateY(5%);
+  transform: translateY(22%);
   display: flex;
   flex-flow: column;
   justify-content: space-evenly;
